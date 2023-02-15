@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="" />
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      java值传递和增强for循环问题 
+      
+      
+      |
+    
+     Hexo
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">zq72</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">归档</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/friends/">
+          <a href="/friends/">朋友</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">关于</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">java值传递和增强for循环问题</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+          2023-02-15 14:59:17
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Java/" title="Java">
+                    #Java
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="Java是值传递"><a href="#Java是值传递" class="headerlink" title="Java是值传递"></a>Java是值传递</h1><p>首先要理解 Java是值传递问题</p>
+<p>正确理解：</p>
+<ol>
+<li><strong>java 中只有值传递没有引用传递</strong>。</li>
+<li>对于基本数据类型传递的就是栈区中的值。</li>
+<li>对于引用类型传递的也是栈区值只不过值是一个地址。</li>
+</ol>
+<h2 id="基本数据类型和引用数据类型"><a href="#基本数据类型和引用数据类型" class="headerlink" title="基本数据类型和引用数据类型"></a>基本数据类型和引用数据类型</h2><p>内存划分方式不同<br>    -基本数据类型：<strong>值存储在栈区域</strong><br>        -byte short int long float double char boolean<br>    -引用数据类型：<strong>值存储在堆区域</strong><br>        -class interface 数组</p>
+<p>引用数据类型在栈区存储的值为对应堆空间的地址</p>
+<h2 id="形参与实参"><a href="#形参与实参" class="headerlink" title="形参与实参"></a>形参与实参</h2><p>形式参数：是在定义函数名和函数体的时候使用的参数,目的是用来接收调用该函数时传入的参数。</p>
+<p>实际参数：在调用有参函数时，主调函数和被调函数之间有数据传递关系。在主调函数中调用一个函数时，函数名后面括号中的参数称为“实际参数”。</p>
+<p><strong>实际参数是调用有参方法的时候真正传递的内容，而形式参数是用于接收实参内容的参数。</strong></p>
+<h2 id="值传递和引用传递"><a href="#值传递和引用传递" class="headerlink" title="值传递和引用传递"></a>值传递和引用传递</h2><p><strong>值传递的特征</strong>——<strong>修改传递过来的值，并不会影响原来的对象</strong></p>
+<p><strong>值传递</strong>是指在调用函数时将实际参数<strong>复制</strong>一份传递到函数中，这样在函数中如果对参数进行修改，将不会影响到实际参数。</p>
+<p><strong>引用传递</strong>是指在调用函数时将实际参数的<strong>地址直接传递</strong>到函数中，那么在函数中对参数所进行的修改，将影响到实际参数。</p>
+<p>值传递和引用传递的区别是 实参到底有没有被<strong>复制</strong>一份给形参。</p>
+<h1 id="for-each循环改数组元素值问题"><a href="#for-each循环改数组元素值问题" class="headerlink" title="for each循环改数组元素值问题"></a>for each循环改数组元素值问题</h1><p><code>for(元素类型 元素变量i : 遍历对象obj)&#123;       xxxxxx;  &#125; </code></p>
+<p>元素变量 i 是一个局部变量，它是引用数组当前元素的副本（类似复制一份）</p>
+<p>使用for each循环更改数组元素时，出现了未能成功改值问题</p>
+<p>自定义Person类，有name（String）和age（int）两个属性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[] nums = &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span> &#125;;</span><br><span class="line">String[] strs = &#123; <span class="string">&quot;aaa&quot;</span>, <span class="string">&quot;bbb&quot;</span>, <span class="string">&quot;ccc&quot;</span> &#125;;</span><br><span class="line">Person[] persons = &#123; <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;熊大&quot;</span>, <span class="number">20</span>), <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;翠花&quot;</span>, <span class="number">17</span>), <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;熊二&quot;</span>, <span class="number">19</span>) &#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>接下来 </p>
+<h2 id="修改-int数组代表的基本数据类型的数组"><a href="#修改-int数组代表的基本数据类型的数组" class="headerlink" title="修改 int数组代表的基本数据类型的数组"></a><strong>修改 int数组代表的基本数据类型的数组</strong></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i : nums) &#123;</span><br><span class="line">		<span class="keyword">if</span> (i == <span class="number">4</span>) &#123;</span><br><span class="line">			i = <span class="number">72</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i : nums) &#123;</span><br><span class="line">		System.out.print(i + <span class="string">&quot;\t&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">System.out.println();</span><br><span class="line"><span class="comment">// 输出：1 2 3 4 5</span></span><br><span class="line"><span class="comment">// 说明nums数组并未修改</span></span><br><span class="line">	</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//相当于：</span></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;nums.length;j++)&#123;</span><br><span class="line">	<span class="type">int</span> i=nums[j];</span><br><span class="line">	<span class="keyword">if</span>(i==<span class="number">4</span>)&#123;</span><br><span class="line">		i=<span class="number">72</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//所以说修改对于原数组根本没有任何影响</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="修改用String类和Person类代表引用数据类型的数组"><a href="#修改用String类和Person类代表引用数据类型的数组" class="headerlink" title="修改用String类和Person类代表引用数据类型的数组"></a>修改用String类和Person类代表引用数据类型的数组</h2><h3 id="对于String类"><a href="#对于String类" class="headerlink" title="对于String类"></a>对于String类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (String string : strs) &#123;</span><br><span class="line">		<span class="keyword">if</span> (string.equals(<span class="string">&quot;aaa&quot;</span>)) &#123;</span><br><span class="line">			string = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">for</span> (String string : strs) &#123;</span><br><span class="line">		System.out.print(string + <span class="string">&quot;\t&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">System.out.println();</span><br><span class="line"><span class="comment">// 输出：aaa bbb ccc</span></span><br><span class="line"><span class="comment">// 说明str数组并未修改</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//相当于</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; strs.length; j++) &#123;</span><br><span class="line">			<span class="type">String</span> <span class="variable">i</span> <span class="operator">=</span> strs[j];</span><br><span class="line">			<span class="keyword">if</span> (i.equals(<span class="string">&quot;aaa&quot;</span>)) &#123;</span><br><span class="line">				i = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"><span class="comment">//String类有不可变的特征，对字符串的修改都是产生了新的字符串对象</span></span><br><span class="line"><span class="comment">//所以这里也没有任何影响</span></span><br><span class="line"><span class="comment">//输出：aaa bbb ccc</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="对于Person类"><a href="#对于Person类" class="headerlink" title="对于Person类"></a>对于Person类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Person person : persons) &#123;</span><br><span class="line">		<span class="keyword">if</span> (person.name.equals(<span class="string">&quot;熊大&quot;</span>)) &#123;</span><br><span class="line">			person.age = <span class="number">100</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">for</span> (Person person : persons) &#123;</span><br><span class="line">		System.out.print(person + <span class="string">&quot;\t&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 输出：Person [name=熊大,age=100] Person [name=翠花,age=17] Person [name=熊二,age=19]</span></span><br><span class="line">	<span class="comment">// 说明persons数组有修改</span></span><br><span class="line">System.out.println();</span><br></pre></td></tr></table></figure>
+
+<p>但Java仍为值传递，对于对象参数，值的内容是对象的引用。</p>
+<p>对于引用类型传递的也是栈区值，只不过值是一个地址。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//相当于</span></span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> x=<span class="number">0</span> ; x&lt;persons.length ; x++) &#123;</span><br><span class="line">			Person i=persons[x];</span><br><span class="line">			<span class="keyword">if</span> (i.name.equals(<span class="string">&quot;熊大&quot;</span>)) &#123; </span><br><span class="line">				i.age = <span class="number">100</span>; </span><br><span class="line">                <span class="comment">//这里改变的是persons[x].age，而不是persons[x]本身，所以能成功改变</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+
+<p>证：通过调试（调试信息）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">persons =&#123;Person[3]@500&#125;</span><br><span class="line"></span><br><span class="line">	0 =&#123;Person@494&#125;&quot;Person [name=熊大, age=20]“</span><br><span class="line"></span><br><span class="line">	1 =&#123;Person@496)&quot;Person [name=翠花, age=17]”</span><br><span class="line"></span><br><span class="line"> 	2 =&#123;Person@498&#125;&quot;Person [name=熊二, age=19]“</span><br><span class="line"></span><br><span class="line">x=0</span><br><span class="line"></span><br><span class="line">i =&#123;Person@494]&quot;Person [name=熊大, age=20]&quot;</span><br><span class="line"></span><br><span class="line">	 persons[x] =&#123;Person@494]&quot;Person [name=熊大, age=20]&quot;</span><br><span class="line"></span><br><span class="line">	i.age = 20</span><br><span class="line"></span><br><span class="line">	i.name =&quot;熊大&quot;</span><br><span class="line"></span><br><span class="line">//经过更改</span><br><span class="line">persons =&#123;Person[3]@500&#125;</span><br><span class="line"></span><br><span class="line">	0 =&#123;Person@494&#125;&quot;Person [name=熊大, age=100]“</span><br><span class="line"></span><br><span class="line">	1 =&#123;Person@496)&quot;Person [name=翠花, age=17]”</span><br><span class="line"></span><br><span class="line"> 	2 =&#123;Person@498&#125;&quot;Person [name=熊二, age=19]“</span><br><span class="line"></span><br><span class="line">i=&#123;Person@494&#125;&quot;Person [name=熊大,age=100]&quot;</span><br></pre></td></tr></table></figure>
+
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/02/09/Test/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
+              2023-02-15 14:59:17
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="Tags"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Java/" title="Java">
+                        #Java
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">Contents</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Java%E6%98%AF%E5%80%BC%E4%BC%A0%E9%80%92"><span class="toc-text">Java是值传递</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E5%BC%95%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">基本数据类型和引用数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BD%A2%E5%8F%82%E4%B8%8E%E5%AE%9E%E5%8F%82"><span class="toc-text">形参与实参</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%80%BC%E4%BC%A0%E9%80%92%E5%92%8C%E5%BC%95%E7%94%A8%E4%BC%A0%E9%80%92"><span class="toc-text">值传递和引用传递</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#for-each%E5%BE%AA%E7%8E%AF%E6%94%B9%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0%E5%80%BC%E9%97%AE%E9%A2%98"><span class="toc-text">for each循环改数组元素值问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-int%E6%95%B0%E7%BB%84%E4%BB%A3%E8%A1%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%95%B0%E7%BB%84"><span class="toc-text">修改 int数组代表的基本数据类型的数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E7%94%A8String%E7%B1%BB%E5%92%8CPerson%E7%B1%BB%E4%BB%A3%E8%A1%A8%E5%BC%95%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%95%B0%E7%BB%84"><span class="toc-text">修改用String类和Person类代表引用数据类型的数组</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8EString%E7%B1%BB"><span class="toc-text">对于String类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8EPerson%E7%B1%BB"><span class="toc-text">对于Person类</span></a></li></ol></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © 2023 Oranges</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The search.xml file was not found, please refer to：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>The request failed, Try to refresh the page or try again later.<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + java%E5%80%BC%E4%BC%A0%E9%80%92%E5%92%8C%E5%A2%9E%E5%BC%BAfor%E5%BE%AA%E7%8E%AF%E9%97%AE%E9%A2%98 + '&url=' + http%3A%2F%2Fexample.com%2F2023%2F02%2F15%2Fjava%25E5%2580%25BC%25E4%25BC%25A0%25E9%2580%2592%25E5%2592%258C%25E5%25A2%259E%25E5%25BC%25BAfor%25E5%25BE%25AA%25E7%258E%25AF%25E9%2597%25AE%25E9%25A2%2598%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=http://example.com/2023/02/15/java%E5%80%BC%E4%BC%A0%E9%80%92%E5%92%8C%E5%A2%9E%E5%BC%BAfor%E5%BE%AA%E7%8E%AF%E9%97%AE%E9%A2%98/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
